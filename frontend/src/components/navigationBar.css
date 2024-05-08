@@ -1,0 +1,11 @@
+.navigation-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.settings-container {
+  display: flex;
+  position: absolute;
+  right: 0;
+}

@@ -1,0 +1,56 @@
+.carousel-container {
+  display: flex;
+}
+
+.activity-feed-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.activity-feed-title {
+  display: flex;
+  justify-content: center;
+}
+
+.acivity-details-container {
+  display: flex;
+  justify-content: center;
+}
+
+.activity-detail {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid grey;
+  border-radius: 15px;
+  height: 20vh;
+  width: 40vh;
+}
+
+.detail-header {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  align-content: center;
+}
+
+.detail-profile-picture {
+  min-height: 10vh;
+  min-width: 10vh;
+  border: 0.5px solid grey;
+  border-radius: 100%;
+}
+
+.detail-profile-name {
+  justify-self: center;
+  padding-left: 10px;
+  flex: 1;
+}
+
+.detail-date {
+  font-size: 12px;
+}
+
+.detail-description {
+  padding: 10px;
+}
