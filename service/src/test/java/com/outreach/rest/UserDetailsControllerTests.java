@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UserDetailsControllerTests {
     @InjectMocks
@@ -45,5 +47,9 @@ public class UserDetailsControllerTests {
         ResponseEntity<User> response = userDetailsController.updateUserDetails(userDetails, userDetailRequest);
 
         assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedUser, response.getBody());
+
+        verify(userService, times(1)).updateUser(username, userDetailRequest);
     }
 }
