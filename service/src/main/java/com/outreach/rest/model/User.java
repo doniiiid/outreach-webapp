@@ -3,6 +3,7 @@ package com.outreach.rest.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,10 +27,12 @@ public class User {
     @NotBlank
     @Size(max = 50)
     @Email
+    @JsonIgnore
     private String email;
 
     @NotBlank
     @Size(max = 120)
+    @JsonIgnore
     private String password;
 
     @Size(max = 20)
@@ -90,4 +93,23 @@ public class User {
         this.roles = roles;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
