@@ -18,6 +18,8 @@ import com.outreach.rest.security.jwt.AuthEntryPointJwt;
 import com.outreach.rest.security.jwt.AuthTokenFilter;
 import com.outreach.rest.security.services.UserDetailsServiceImpl;
 
+import static com.outreach.rest.model.ERole.ROLE_USER;
+
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
@@ -60,6 +62,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
