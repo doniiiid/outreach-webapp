@@ -15,13 +15,19 @@ public class Store extends Location {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreInventory> storeInventoryList;
 
-    @NotBlank
+//    @NotBlank
     private String name;
 
-    @NotBlank
+//    @NotBlank
     private String[] category; //add enum
 
-    public Store () {}
+    public Store() {}
+
+    public Store (Long id, String name, String[] category) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+    }
 
     public Store (Long id, List<StoreInventory> storeInventoryList, String name, String[] category) {
         this.id = id;

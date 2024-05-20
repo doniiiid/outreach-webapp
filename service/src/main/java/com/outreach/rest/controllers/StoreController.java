@@ -1,10 +1,13 @@
 package com.outreach.rest.controllers;
 
 import com.outreach.rest.dto.StoreDTO;
+import com.outreach.rest.dto.StoreDetailDTO;
 import com.outreach.rest.model.Store;
 import com.outreach.rest.payload.request.InventoryItemRequest;
 import com.outreach.rest.repository.StoreRepository;
 import com.outreach.rest.service.StoreService;
+import com.outreach.rest.util.mappers.StoreDetailMapper;
+import com.outreach.rest.util.mappers.StoreInventoryMapper;
 import com.outreach.rest.util.mappers.StoreMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +38,11 @@ public class StoreController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<Store> getStoreDetail(@RequestParam Long storeId) {
+    public ResponseEntity<StoreDetailDTO> getStoreDetail(@RequestParam Long storeId) {
         Optional<Store> store = storeService.getStore(storeId);
-        return store.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return store.map(storeDetail -> {
+            return ResponseEntity.ok(StoreDetailMapper.toDTO(storeDetail));
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 //    @PostMapping("/detail")

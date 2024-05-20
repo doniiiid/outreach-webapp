@@ -3,6 +3,7 @@ package com.outreach.rest;
 import com.outreach.rest.controllers.StoreController;
 import com.outreach.rest.dto.InventoryItemDTO;
 import com.outreach.rest.dto.StoreDTO;
+import com.outreach.rest.dto.StoreDetailDTO;
 import com.outreach.rest.model.Store;
 import com.outreach.rest.model.StoreInventory;
 import com.outreach.rest.payload.request.InventoryItemRequest;
@@ -95,7 +96,7 @@ public class StoreControllerTests {
         ));
         when(storeService.getStore(id)).thenReturn(store);
 
-        ResponseEntity<Store> response = storeController.getStoreDetail(id);
+        ResponseEntity<StoreDetailDTO> response = storeController.getStoreDetail(id);
 
         assertNotNull(response);
     }

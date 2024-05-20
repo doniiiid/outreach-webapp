@@ -14,13 +14,13 @@ public class StoreInventory {
     @JoinColumn(name="store_id", nullable = false)
     private Store store;
 
-    @NotBlank
+//    @NotBlank
     private String itemName;
 
-    @NotBlank
+//    @NotBlank
     private Float price;
 
-    @NotBlank
+//    @NotBlank
     private int quantity;
 
     public StoreInventory() {}
