@@ -35,4 +35,14 @@ public class UserService {
             throw new UserNotFoundException("Username not found:" + username);
         }
     }
+
+    public void deleteUser (String username) {
+        Optional<User> existingUser = userRepository.findByUsername(username);
+
+        if(existingUser.isPresent()) {
+            userRepository.delete(existingUser.get());
+        } else {
+            throw new UserNotFoundException("Username not found:" + username);
+        }
+    }
 }

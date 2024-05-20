@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserDetailsController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -28,5 +28,13 @@ public class UserDetailsController {
         User user = userService.updateUser(username, userDetailRequest);
 
         return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String username = userDetails.getUsername();
+        userService.deleteUser(username);
+
+        return ResponseEntity.ok().build();
     }
 }
