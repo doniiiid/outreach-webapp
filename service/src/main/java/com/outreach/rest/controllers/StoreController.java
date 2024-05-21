@@ -45,8 +45,10 @@ public class StoreController {
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @PostMapping("/detail")
-//    public ResponseEntity<Store> updateStoreDetails(@RequestParam Long storeId) {}
+    @PostMapping("/inventory")
+    public ResponseEntity<StoreDetailDTO> updateInventory(@RequestParam Long storeId, @Valid @RequestBody InventoryItemRequest inventoryItemRequest) {
+        return ResponseEntity.ok(storeService.updateStoreInventory(storeId, inventoryItemRequest.getItems()));
+    }
 
     @PutMapping("/inventory")
     public ResponseEntity<StoreDTO> insertInventory (@RequestParam Long storeId, @Valid @RequestBody InventoryItemRequest inventoryItemRequest) {
