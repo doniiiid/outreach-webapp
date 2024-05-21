@@ -13,4 +13,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(StoreNotFoundException.class)
+    public ResponseEntity<?> handleStoreNotFoundException(StoreNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

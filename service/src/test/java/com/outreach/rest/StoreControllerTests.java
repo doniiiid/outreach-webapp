@@ -9,6 +9,7 @@ import com.outreach.rest.model.StoreInventory;
 import com.outreach.rest.payload.request.InventoryItemRequest;
 import com.outreach.rest.repository.StoreRepository;
 import com.outreach.rest.service.StoreService;
+import com.outreach.rest.util.mappers.StoreDetailMapper;
 import com.outreach.rest.util.mappers.StoreMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -152,5 +150,48 @@ public class StoreControllerTests {
         ResponseEntity<StoreDTO> response = storeController.insertInventory(id, inventoryItemRequest);
 
         assertNotNull(response);
+    }
+
+    @Test
+    public void testUpdateStoreInventory() {
+        Long storeId = 1L;
+        Long inventoryId = 2L;
+        String itemName = "Toothpaste";
+        Float price = 3.99f;
+        int quantity = 4;
+        Optional<Store> store = Optional.of(new Store(storeId, new ArrayList<StoreInventory>(), "CVS", new String[1]));
+        StoreInventory newItem = new StoreInventory(
+                inventoryId,
+                itemName,
+                price,
+                quantity,
+                new Store(storeId, new ArrayList<StoreInventory>(), "CVS", new String[1])
+        );
+
+        List<StoreInventory> newInventory = new ArrayList<>();
+        newInventory.add(newItem);
+        Store updatedStore = new Store(
+                store.get().getId(),
+                newInventory,
+                store.get().getName(),
+                store.get().getCategory()
+        );
+        StoreDetailDTO updatedStoreDTO = StoreDetailMapper.toDTO(updatedStore);
+        InventoryItemRequest inventoryItemRequest = new InventoryItemRequest();
+        List<InventoryItemDTO> items = new ArrayList<>();
+        items.add(new InventoryItemDTO(inventoryId, storeId, itemName, price, quantity));
+        inventoryItemRequest.setItems(items);
+
+        Assertions.assertEquals(0, store.get().getStoreInventoryList().size());
+
+        when(storeRepository.findById(storeId)).thenReturn(store);
+        when(storeService.updateStoreInventory(storeId, items)).thenReturn(updatedStoreDTO);
+        when(storeRepository.save(updatedStore)).thenReturn(updatedStore);
+
+        ResponseEntity<StoreDetailDTO> response = storeController.updateInventory(storeId, inventoryItemRequest);
+
+        assertNotNull(response);
+
+        assertEquals(1, response.getBody().getStoreInventoryList().size());
     }
 }
