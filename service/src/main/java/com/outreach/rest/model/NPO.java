@@ -18,6 +18,15 @@ public class NPO extends Location {
 
     private List<String> category;
 
+    public NPO() {};
+
+    public NPO(Long id, String name, List<NPOInventory> inventoryList, List<String> category) {
+        this.id = id;
+        this.name = name;
+        this.inventoryList = inventoryList;
+        this.category = category;
+    };
+
     public Long getId() {
         return id;
     }

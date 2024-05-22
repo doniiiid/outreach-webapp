@@ -2,6 +2,8 @@ package com.outreach.rest.model;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "npo_inventory")
 public class NPOInventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
