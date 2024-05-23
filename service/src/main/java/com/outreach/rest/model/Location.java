@@ -9,6 +9,8 @@ public abstract class Location {
 
     protected String state;
 
+    protected String city;
+
     protected String country;
 
     protected String zipCode;
@@ -43,5 +45,13 @@ public abstract class Location {
 
     public String getZipCode() {
         return zipCode;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
     }
 }
