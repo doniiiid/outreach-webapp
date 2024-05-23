@@ -15,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -53,5 +57,34 @@ public class StoreController {
     @PutMapping("/inventory")
     public ResponseEntity<StoreDTO> insertInventory (@RequestParam Long storeId, @Valid @RequestBody InventoryItemRequest inventoryItemRequest) {
         return ResponseEntity.ok(storeService.addStoreInventory(storeId, inventoryItemRequest.getItems()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<StoreDTO>> searchStores(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam String store_name,
+            @RequestParam String location_name
+    ) {
+        String decodedLocationName = "";
+        String decodedStoreName = "";
+
+        try {
+            decodedLocationName = URLDecoder.decode(location_name, StandardCharsets.UTF_8.name());
+            decodedStoreName = URLDecoder.decode(store_name, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).build();
+        }
+
+        String[] locationParts = decodedLocationName.split(", ");
+        if (locationParts.length != 2) {
+            return ResponseEntity.status(400).build();
+        }
+
+        String city = locationParts[0];
+        String state = locationParts[1];
+
+        return ResponseEntity.ok(storeService.searchStores(page, size, decodedStoreName, city, state));
     }
 }

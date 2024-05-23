@@ -29,7 +29,8 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 public class StoreControllerTests {
     private MockMvc mockMvc;
@@ -193,5 +194,51 @@ public class StoreControllerTests {
         assertNotNull(response);
 
         assertEquals(1, response.getBody().getStoreInventoryList().size());
+    }
+
+    @Test
+    public void testSearchStores() throws Exception {
+        String storeName1 = "Walgreens";
+        String storeName2 = "Walmart";
+        String location_name = "Houston%2C%20TX";
+        String city = "Houston";
+        String state = "TX";
+        String store_name = "Wa;";
+        Store store1 = new Store(
+                1L,
+                storeName1,
+                new String[0]
+        );
+        Store store2 = new Store(
+                2L,
+                storeName2,
+                new String[0]
+        );
+
+        List<Store> stores = new ArrayList<>(Arrays.asList(store1, store2));
+        Page<Store> storePage = new PageImpl<>(stores);
+        Pageable pageable = PageRequest.ofSize(1);
+
+        when(storeRepository.findByNameStartingWithAndCityAndState(
+                store_name,
+                city,
+                state,
+                pageable)).thenReturn(storePage);
+        when(storeService.searchStores(
+                0,
+                10,
+                store_name,
+                city,
+                state)).thenReturn(StoreMapper.convertPageStoreToPageStoreDTO(storePage));
+
+        ResponseEntity<Page<StoreDTO>> response = storeController.searchStores(0, 10, store_name, location_name);
+
+        verify(storeService, times(1)).searchStores(0,
+                10,
+                store_name,
+                city,
+                state);
+
+        verifyNoMoreInteractions(storeService);
     }
 }

@@ -10,6 +10,8 @@ import com.outreach.rest.util.StoreNotFoundException;
 import com.outreach.rest.util.mappers.StoreDetailMapper;
 import com.outreach.rest.util.mappers.StoreInventoryMapper;
 import com.outreach.rest.util.mappers.StoreMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,9 @@ import java.util.stream.Collectors;
 public class StoreService {
     @Autowired
     private StoreRepository storeRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(StoreService.class);
+
 
     public Page<StoreDTO> getAllStores(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -83,5 +88,15 @@ public class StoreService {
         else {
             throw new StoreNotFoundException("Store id not found: " + id);
         }
+    }
+
+    public Page<StoreDTO> searchStores(
+            int page,
+            int size,
+            String name,
+            String city,
+            String state) {
+        Pageable pageable = PageRequest.of(page, size);
+        return StoreMapper.convertPageStoreToPageStoreDTO(storeRepository.findByNameStartingWithAndCityAndState(name, city, state, pageable));
     }
 }
