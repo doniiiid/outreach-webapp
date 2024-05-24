@@ -79,4 +79,15 @@ public class NPOService {
             throw new NPONotFoundException("NPO id not found:" + id);
         }
     }
+
+    public Page<NPODto> searchNpos(
+            int page,
+            int size,
+            String name,
+            String city,
+            String state
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return NPOMapper.convertPageNPOToPageNPODto(npoRepository.findByNameStartingWithAndCityAndState(name, city, state, pageable));
+    }
 }
