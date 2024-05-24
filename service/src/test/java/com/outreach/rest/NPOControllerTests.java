@@ -33,7 +33,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class NPOControllerTests {
     @InjectMocks
@@ -204,5 +205,56 @@ public class NPOControllerTests {
         assertNotNull(response);
         assertEquals(1, response.getBody().getInventoryList().size());
         assertEquals(newItemName, response.getBody().getInventoryList().get(0).getItemName());
+    }
+
+    @Test
+    public void testSearchNPOs() {
+        String npoName1 = "Red Cross";
+        String npoName2 = "Blue Shield";
+        String location_name = "Houston%2C%20TX";
+        String city = "Houston";
+        String state = "TX";
+        String npo_name = "Red";
+
+        NPO npo1 = new NPO(
+                1L,
+                npoName1,
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
+        NPO npo2 = new NPO(
+                2L,
+                npoName2,
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
+        Page<NPO> npoPage = new PageImpl<>(Arrays.asList(npo1, npo2));
+        Pageable pageable = PageRequest.ofSize(1);
+
+        when(npoRepository.findByNameStartingWithAndCityAndState(
+                npo_name,
+                city,
+                state,
+                pageable
+        )).thenReturn(npoPage);
+        when(npoService.searchNpos(
+                0,
+                10,
+                npo_name,
+                city,
+                state
+        )).thenReturn(NPOMapper.convertPageNPOToPageNPODto(npoPage));
+
+        ResponseEntity<Page<NPODto>> response = npoContoller.searchNPOs(0, 10, npo_name, location_name);
+
+        verify(npoService, times(1)).searchNpos(
+                0,
+                10,
+                npo_name,
+                city,
+                state);
+
+        verifyNoMoreInteractions(npoService);
+        assertEquals(1, response.getBody().getTotalPages());
     }
 }

@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -50,5 +53,34 @@ public class NPOContoller {
     @PostMapping("/inventory")
     public ResponseEntity<NPODetailDTO> updateInventory (@RequestParam Long id, @Valid @RequestBody NPOInventoryRequest npoInventoryRequest) {
         return ResponseEntity.ok(npoService.updateNPOInventory(id, npoInventoryRequest.getItems()));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<NPODto>> searchNPOs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam String npo_name,
+            @RequestParam String location_name
+    ) {
+        String decodedLocationName = "";
+        String decodedNPOName = "";
+
+        try {
+            decodedLocationName = URLDecoder.decode(location_name, StandardCharsets.UTF_8.name());
+            decodedNPOName = URLDecoder.decode(npo_name, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).build();
+        }
+
+        String[] locationParts = decodedLocationName.split(", ");
+        if (locationParts.length != 2) {
+            return ResponseEntity.status(400).build();
+        }
+
+        String city = locationParts[0];
+        String state = locationParts[1];
+
+        return ResponseEntity.ok(npoService.searchNpos(page, size, decodedNPOName, city, state));
     }
 }
